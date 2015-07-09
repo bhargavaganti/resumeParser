@@ -53,10 +53,6 @@ function Init() {
                     }
                 });
                 formData.append('file ' + index, file);
-                // not generally required
-                /*xhr.addEventListener('error', function () {
-                    reject('Some other error (error description here) ... ');
-                });*/
                 xhr.send(formData);
             });
         }
