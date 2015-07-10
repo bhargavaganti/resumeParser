@@ -1,7 +1,5 @@
 var express = require('express'),
     router = express.Router(),
-    multer = require('multer'),
-    spawn = require('child_process').spawn,
     fs = require('fs'),
     resumeInfo = require('../modules/resumeInfo');
 
@@ -12,34 +10,21 @@ router.get('/', function(req, res) {
         else res.status(200).json(JSON.stringify(results));
     });
 });
-router.use(multer({
-    dest:'./upload/'
-}));
 router.post('/', function (req, res){
-    var filename, emailAddr, filesObj, phoneNum;
-    filesObj = req.files;
-    Object.keys(filesObj).forEach(function(index){
-        filename = filesObj[index].originalname.split('.')[0];
-
-        pdftotext = spawn('pdftotext.exe', ['C:\\Users\\Rashmika\\Documents\\GitHub\\resumeParser\\project\\upload\\' + req.files[index].name, 'C:\\Users\\Rashmika\\Documents\\GitHub\\resumeParser\\project\\text\\' + filename + '.txt'],  {cwd: 'C:\\Users\\Rashmika\\Documents\\xpdf'});
-
-        pdftotext.stderr.on('data', function (data) {
-            console.log('stderr: ' + data);
-        });
-
-        pdftotext.on('close', function (code) {
-            console.log('child process exited with code ' + code);
-            readContent(filename, function (err, content) {
-                emailAddr = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.exec(content);
-                phoneNum = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.exec(content);
-                console.log('email found in the resume ',emailAddr);
-                console.log('phone number found in the resume ',phoneNum);
-                savetoMongo(filename, emailAddr, phoneNum);
-            });
-
+    //var regEmail = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+    //var regPhone = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
+    console.log('files received', req.body);
+    var textfiles = req.body.txtfiles, emailAddr = '', phoneNum = 0;
+    console.log(textfiles);
+    textfiles.forEach(function(file){
+        readContent(file, function(err, content){
+            emailAddr = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.exec(content);
+            phoneNum = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.exec(content);
+            console.log('email found in the resume ',emailAddr);
+            console.log('phone number found in the resume ',phoneNum);
+            savetoMongo(file, emailAddr, phoneNum);
         });
     });
-
     res.status(200).json(JSON.stringify({message: 'Files uploaded successfully'}));
 });
 

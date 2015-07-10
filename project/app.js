@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var parseresume = require('./routes/parseresume');
+var uploadresume = require('./routes/uploadresume');
+var getdetails = require('./routes/getdetails');
 
 var app = express();
 
@@ -27,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/parseresume', parseresume);
+app.use('/uploadresume', uploadresume);
+app.use('/getdetails', getdetails);
 
 mongoose.connect('mongodb://localhost/test', function(error){
   if(error) console.log(error);
