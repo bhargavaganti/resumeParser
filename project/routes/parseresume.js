@@ -11,17 +11,15 @@ router.get('/', function(req, res) {
     });
 });
 router.post('/', function (req, res){
-    //var regEmail = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
-    //var regPhone = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
-    console.log('files received', req.body);
+    //console.log('files received', req.body);
     var textfiles = req.body.txtfiles, emailAddr = '', phoneNum = 0;
-    console.log(textfiles);
+    //console.log(textfiles);
     textfiles.forEach(function(file){
         readContent(file, function(err, content){
             emailAddr = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.exec(content);
             phoneNum = /(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.exec(content);
-            console.log('email found in the resume ',emailAddr);
-            console.log('phone number found in the resume ',phoneNum);
+            //console.log('email found in the resume ',emailAddr);
+            //console.log('phone number found in the resume ',phoneNum);
             savetoMongo(file, emailAddr, phoneNum);
         });
     });

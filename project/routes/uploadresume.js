@@ -29,9 +29,10 @@ router.post('/', function (req, res){
         });
         pdftotext.on('close', function (code) {
             console.log('child process exited with code ' + code);
+            //code === 0
         });
     });
-    console.log('files',files);
+    //console.log('files',files);
     res.status(200).json(JSON.stringify({txtfiles: files}));
 });
 module.exports = router;

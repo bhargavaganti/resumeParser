@@ -23,12 +23,12 @@ function Init() {
     // file selection
     function FileSelectHandler(e) {
         // cancel event and hover styling
-        console.log('event', e);
+        //console.log('event', e);
         FileDragHover(e);
         // fetch FileList object
         var files = Array.prototype.slice.call(e.target.files || e.dataTransfer.files);
         var formData = new FormData();
-        console.log('number of files', files.length);
+        //console.log('number of files', files.length);
         // process all File objects
 
         files.forEach(function (file, index) {
@@ -37,11 +37,11 @@ function Init() {
         Promise.all([getPromise('/uploadresume', 'POST', formData)]).then(function (data) {
             //console.log('results ',data[0]);
             msg.innerHTML = 'Files uploaded successfully';
-            console.log(JSON.parse(data));
+            //console.log(JSON.parse(data));
             msg.innerHTML = 'files uploaded successfully';
             parseResume(JSON.parse(data));
        },function(err){
-         console.log('error uploading files ', err);
+            console.log('error uploading files ', err);
         });
     function getPromise(url, httpVerb, formData) {
         return new Promise(function (resolve, reject) {
@@ -65,7 +65,7 @@ function Init() {
         xhr.open('GET', '/getdetails');
         xhr.addEventListener('readystatechange', function () {
             if (xhr.readyState === 4) {
-                console.log(JSON.parse(xhr.responseText));
+                //console.log(JSON.parse(xhr.responseText));
                 list.style.display = 'block';
                 list.addEventListener('click', function(){
                    list.innerHTML = JSON.parse(xhr.responseText);
@@ -75,13 +75,13 @@ function Init() {
         xhr.send(JSON.stringify(files));
     }
     function parseResume(files) {
-        console.log('files', files);
+        //console.log('files', files);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/parseresume');
         xhr.setRequestHeader('content-type', 'application/json');
         xhr.addEventListener('readystatechange', function () {
             if (xhr.readyState === 4) {
-                console.log(xhr.responseText);
+                //console.log(xhr.responseText);
                 getDetails();
             }
         });
